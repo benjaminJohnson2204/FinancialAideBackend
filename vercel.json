@@ -1,0 +1,12 @@
+{
+    "builds": [{
+        "src": "FinancialAideBackend/wsgi.py",
+        "use": "@vercel/python"
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "FinancialAideBackend/wsgi.py"
+        }
+    ]
+}

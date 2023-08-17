@@ -1,0 +1,1425 @@
+openapi: 3.0.3
+info:
+  title: Financial Aide Backend
+  version: 1.0.0
+  description: API Backend for Financial Aide open-source budgeting system
+paths:
+  /api/budgets/budget_categories:
+    get:
+      operationId: api_budgets_budget_categories_list
+      description: Get a list of all budget categories
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Budget Categories
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBudgetCategoryResponseList'
+          description: ''
+  /api/budgets/budget_category_relations:
+    get:
+      operationId: api_budgets_budget_category_relations_list
+      description: List/create budget category relations
+      parameters:
+      - in: query
+        name: budget
+        schema:
+          type: integer
+      - in: query
+        name: category
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Budget Category Relations
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBudgetCategoryRelationResponseList'
+          description: ''
+    post:
+      operationId: api_budgets_budget_category_relations_create
+      description: List/create budget category relations
+      tags:
+      - Budget Category Relations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCategoryRelationCreationRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCategoryRelationResponse'
+          description: ''
+  /api/budgets/budget_category_relations/{id}:
+    get:
+      operationId: api_budgets_budget_category_relations_retrieve
+      description: Retrieve, update, or delete a budget category relation
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget Category Relations
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCategoryRelationResponse'
+          description: ''
+    put:
+      operationId: api_budgets_budget_category_relations_update
+      description: Retrieve, update, or delete a budget category relation
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget Category Relations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCategoryRelationCreationRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCategoryRelationResponse'
+          description: ''
+    patch:
+      operationId: api_budgets_budget_category_relations_partial_update
+      description: Retrieve, update, or delete a budget category relation
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget Category Relations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBudgetCategoryRelationCreationRequest'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCategoryRelationResponse'
+          description: ''
+    delete:
+      operationId: api_budgets_budget_category_relations_destroy
+      description: Retrieve, update, or delete a budget category relation
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget Category Relations
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/budgets/budgets:
+    get:
+      operationId: api_budgets_budgets_list
+      description: List/create budgets
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Budgets
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBudgetResponseList'
+          description: ''
+    post:
+      operationId: api_budgets_budgets_create
+      description: List/create budgets
+      tags:
+      - Budgets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCreationRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetResponse'
+          description: ''
+  /api/budgets/budgets/{id}:
+    get:
+      operationId: api_budgets_budgets_retrieve
+      description: Retrieve, update, or delete a budget
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budgets
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetResponse'
+          description: ''
+    put:
+      operationId: api_budgets_budgets_update
+      description: Retrieve, update, or delete a budget
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budgets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCreationRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetResponse'
+          description: ''
+    patch:
+      operationId: api_budgets_budgets_partial_update
+      description: Retrieve, update, or delete a budget
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budgets
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBudgetCreationRequest'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetResponse'
+          description: ''
+    delete:
+      operationId: api_budgets_budgets_destroy
+      description: Retrieve, update, or delete a budget
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budgets
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/budgets/budgets/{id}/category_relations/bulk_update:
+    put:
+      operationId: api_budgets_budgets_category_relations_bulk_update_update
+      description: Bulk update the category relations for this budget
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget Category Relations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCategoryRelationsBulkUpdateRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCategoryRelationsBulkUpdate'
+          description: ''
+    patch:
+      operationId: api_budgets_budgets_category_relations_bulk_update_partial_update
+      description: Bulk update the category relations for this budget
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budget Category Relations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBudgetCategoryRelationsBulkUpdateRequest'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BudgetCategoryRelationsBulkUpdate'
+          description: ''
+  /api/budgets/budgets/{id}/spending_export:
+    get:
+      operationId: api_budgets_budgets_spending_export_retrieve
+      description: Get a CSV file of planned and actual spending by category for this
+        budget
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Budgets
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/expenses/expenses:
+    get:
+      operationId: api_expenses_expenses_list
+      description: List/create expenses
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: integer
+      - in: query
+        name: category__in
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Multiple values may be separated by commas.
+        explode: false
+        style: form
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: timestamp
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp__lte
+        schema:
+          type: string
+          format: date-time
+      tags:
+      - Expenses
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExpenseResponseList'
+          description: ''
+    post:
+      operationId: api_expenses_expenses_create
+      description: List/create expenses
+      tags:
+      - Expenses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCreationRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+          description: ''
+  /api/expenses/expenses/{id}:
+    get:
+      operationId: api_expenses_expenses_retrieve
+      description: Retrieve/update/delete expenses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expenses
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+          description: ''
+    put:
+      operationId: api_expenses_expenses_update
+      description: Retrieve/update/delete expenses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expenses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCreationRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+          description: ''
+    patch:
+      operationId: api_expenses_expenses_partial_update
+      description: Retrieve/update/delete expenses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expenses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedExpenseCreationRequest'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExpenseResponse'
+          description: ''
+    delete:
+      operationId: api_expenses_expenses_destroy
+      description: Retrieve/update/delete expenses
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Expenses
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/expenses/expenses/by_category:
+    get:
+      operationId: api_expenses_expenses_by_category_list
+      description: Get total actual spending for each budget category
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: integer
+      - in: query
+        name: category__in
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Multiple values may be separated by commas.
+        explode: false
+        style: form
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: timestamp
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp__lte
+        schema:
+          type: string
+          format: date-time
+      tags:
+      - Expenses
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedExpensesByCategoryList'
+          description: ''
+  /api/expenses/expenses/csv_export:
+    get:
+      operationId: api_expenses_expenses_csv_export_list
+      description: Get a CSV file with the user's expenses (can be filtered)
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: integer
+      - in: query
+        name: category__in
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Multiple values may be separated by commas.
+        explode: false
+        style: form
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: timestamp
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp__lte
+        schema:
+          type: string
+          format: date-time
+      tags:
+      - Expenses
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/login:
+    post:
+      operationId: api_users_login_create
+      description: Log in with username and password. Information about the user will
+        be returned.
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: ''
+  /api/users/logout:
+    post:
+      operationId: api_users_logout_create
+      description: Log out the user
+      tags:
+      - Users
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/register:
+    post:
+      operationId: api_users_register_create
+      description: Register a new user. The new user will be logged in, and information
+        about them returned.
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequestRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: ''
+  /api/users/whoami:
+    get:
+      operationId: api_users_whoami_retrieve
+      description: Get information about the current user
+      tags:
+      - Users
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: ''
+  /schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - schema
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+components:
+  schemas:
+    BudgetCategoryRelationBulkUpdate:
+      type: object
+      properties:
+        category:
+          type: integer
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        is_percentage:
+          type: boolean
+        id:
+          type: integer
+      required:
+      - amount
+      - category
+      - is_percentage
+    BudgetCategoryRelationBulkUpdateRequest:
+      type: object
+      properties:
+        category:
+          type: integer
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        is_percentage:
+          type: boolean
+        id:
+          type: integer
+      required:
+      - amount
+      - category
+      - is_percentage
+    BudgetCategoryRelationCreationRequest:
+      type: object
+      properties:
+        budget:
+          type: integer
+        category:
+          type: integer
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        is_percentage:
+          type: boolean
+      required:
+      - amount
+      - budget
+      - category
+      - is_percentage
+    BudgetCategoryRelationResponse:
+      type: object
+      properties:
+        budget:
+          $ref: '#/components/schemas/BudgetResponse'
+        category:
+          $ref: '#/components/schemas/BudgetCategoryResponse'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        is_percentage:
+          type: boolean
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - amount
+      - budget
+      - category
+      - id
+      - is_percentage
+    BudgetCategoryRelationsBulkUpdate:
+      type: object
+      properties:
+        category_relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCategoryRelationBulkUpdate'
+      required:
+      - category_relations
+    BudgetCategoryRelationsBulkUpdateRequest:
+      type: object
+      properties:
+        category_relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCategoryRelationBulkUpdateRequest'
+      required:
+      - category_relations
+    BudgetCategoryResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 256
+        typical_percentage:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          nullable: true
+        typical_monthly_amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          nullable: true
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - name
+    BudgetCreationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 256
+        description:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 2048
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        interval:
+          $ref: '#/components/schemas/IntervalEnum'
+        income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        user:
+          type: integer
+      required:
+      - end_time
+      - income
+      - interval
+      - name
+      - start_time
+      - user
+    BudgetResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 256
+        description:
+          type: string
+          nullable: true
+          maxLength: 2048
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        interval:
+          $ref: '#/components/schemas/IntervalEnum'
+        income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        user:
+          $ref: '#/components/schemas/UserResponse'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - created_at
+      - end_time
+      - id
+      - income
+      - interval
+      - name
+      - start_time
+      - updated_at
+      - user
+    ExpenseCreationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 256
+        timestamp:
+          type: string
+          format: date-time
+        user:
+          type: integer
+        description:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 2048
+        category:
+          type: integer
+          nullable: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - amount
+      - timestamp
+      - user
+    ExpenseResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          maxLength: 256
+        timestamp:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/UserResponse'
+        description:
+          type: string
+          nullable: true
+          maxLength: 2048
+        category:
+          $ref: '#/components/schemas/BudgetCategoryResponse'
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - amount
+      - category
+      - id
+      - timestamp
+      - user
+    ExpensesByCategory:
+      type: object
+      properties:
+        total_amount:
+          type: number
+          format: double
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - total_amount
+    IntervalEnum:
+      enum:
+      - yearly
+      - monthly
+      - weekly
+      type: string
+      description: |-
+        * `yearly` - Yearly
+        * `monthly` - Monthly
+        * `weekly` - Weekly
+    LoginRequestRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          minLength: 1
+          maxLength: 128
+      required:
+      - password
+      - username
+    PaginatedBudgetCategoryRelationResponseList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCategoryRelationResponse'
+    PaginatedBudgetCategoryResponseList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCategoryResponse'
+    PaginatedBudgetResponseList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetResponse'
+    PaginatedExpenseResponseList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExpenseResponse'
+    PaginatedExpensesByCategoryList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExpensesByCategory'
+    PatchedBudgetCategoryRelationCreationRequest:
+      type: object
+      properties:
+        budget:
+          type: integer
+        category:
+          type: integer
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        is_percentage:
+          type: boolean
+    PatchedBudgetCategoryRelationsBulkUpdateRequest:
+      type: object
+      properties:
+        category_relations:
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCategoryRelationBulkUpdateRequest'
+    PatchedBudgetCreationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 256
+        description:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 2048
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        interval:
+          $ref: '#/components/schemas/IntervalEnum'
+        income:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        user:
+          type: integer
+    PatchedExpenseCreationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 256
+        timestamp:
+          type: string
+          format: date-time
+        user:
+          type: integer
+        description:
+          type: string
+          nullable: true
+          minLength: 1
+          maxLength: 2048
+        category:
+          type: integer
+          nullable: true
+        amount:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+    RegisterRequestRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          minLength: 1
+          maxLength: 128
+      required:
+      - password
+      - username
+    UserResponse:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - username
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
+servers:
+- url: http://127.0.0.1:8000
