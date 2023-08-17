@@ -32,7 +32,8 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 DEBUG = env('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
-    env('FRONTEND_URL').lstrip('http://').lstrip('https://').split(':')[0]
+    env('FRONTEND_URL').lstrip('http://').lstrip('https://').split(':')[0],
+    '.vercel.app'
 ]
 
 
