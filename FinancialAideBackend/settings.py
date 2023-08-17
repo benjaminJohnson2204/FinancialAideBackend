@@ -22,17 +22,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+
+def get_environment_var(key):
+    """
+    For Vercel deployment we must use os.getenv(), while for local development with
+    a .env file we use env(). First check os.getenv(), then default to env()
+    """
+    return os.getenv(key, env(key))
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('DJANGO_SECRET_KEY')
+SECRET_KEY = get_environment_var('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG') == 'True'
+DEBUG = get_environment_var('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
-    env('FRONTEND_URL').lstrip('http://').lstrip('https://').split(':')[0],
+    get_environment_var('FRONTEND_URL').lstrip('http://').lstrip('https://').split(':')[0],
     '.vercel.app'
 ]
 
@@ -84,11 +92,11 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    env('FRONTEND_URL'),
+    get_environment_var('FRONTEND_URL'),
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    env('FRONTEND_URL'),
+    get_environment_var('FRONTEND_URL'),
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -118,7 +126,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Financial Aide Backend',
     'DESCRIPTION': 'API Backend for Financial Aide open-source budgeting system',
     'VERSION': '1.0.0',
-    'SERVERS': [{'url': env('BACKEND_URL')}],
+    'SERVERS': [{'url': get_environment_var('BACKEND_URL')}],
     'COMPONENT_SPLIT_REQUEST': True,
 }
 
@@ -146,9 +154,9 @@ WSGI_APPLICATION = 'FinancialAideBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if env('USE_POSTGRES') == 'True':
+if get_environment_var('USE_POSTGRES') == 'True':
     DATABASES = {
-        'default': dj_database_url.parse(env('DATABASE_URL'))
+        'default': dj_database_url.parse(get_environment_var('DATABASE_URL'))
     }
 
 else:
