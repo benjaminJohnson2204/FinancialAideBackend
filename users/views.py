@@ -42,7 +42,10 @@ class LoginView(generics.CreateAPIView):
         if user is not None:
             login(request, user)
             response_serializer = UserResponseSerializer(user)
-            headers = self.get_success_headers(response_serializer.data)
+            headers = {
+                **self.get_success_headers(response_serializer.data),
+                'X-Show-CSRFToken': 'True',
+            }
             return views.Response(response_serializer.data, status=status.HTTP_200_OK, headers=headers)
         raise serializers.ValidationError('Invalid credentials')
 
