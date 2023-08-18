@@ -42,8 +42,7 @@ SECRET_KEY = get_environment_var('DJANGO_SECRET_KEY')
 DEBUG = get_environment_var('DEBUG') == 'True'
 
 ALLOWED_HOSTS = [
-    get_environment_var('FRONTEND_URL').lstrip('http://').lstrip('https://').split(':')[0],
-    '.vercel.app'
+    get_environment_var('BACKEND_URL').lstrip('http://').lstrip('https://').split(':')[0]
 ]
 
 
@@ -76,6 +75,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CSRF_COOKIE_DOMAIN = SESSION_COOKIE_DOMAIN = get_environment_var('FRONTEND_URL').lstrip('http://').lstrip('https://').split(':')[0]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
