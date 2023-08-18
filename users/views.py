@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, permissions, status, views
 from drf_spectacular.utils import extend_schema
 
@@ -49,6 +51,7 @@ class LoginView(generics.CreateAPIView):
     tags=['Users'],
     description='Log out the user'
 )
+@method_decorator(csrf_exempt, name='dispatch')
 class LogoutView(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = EmptySerializer

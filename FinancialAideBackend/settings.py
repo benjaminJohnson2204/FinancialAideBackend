@@ -80,7 +80,6 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SAMESITE = 'None'
-# CSRF_COOKIE_DOMAIN = SESSION_COOKIE_DOMAIN = get_environment_var('FRONTEND_URL')
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
@@ -163,7 +162,13 @@ WSGI_APPLICATION = 'FinancialAideBackend.wsgi.app'
 
 if get_environment_var('USE_POSTGRES') == 'True':
     DATABASES = {
-        'default': dj_database_url.parse(get_environment_var('DATABASE_URL'))
+        'default': {
+            **dj_database_url.parse(get_environment_var('DATABASE_URL')),
+            'POOL_OPTIONS': {
+                'POOL_SIZE': 2,
+                'MAX_OVERFLOW': 1,
+            }
+        }
     }
 
 else:
