@@ -12,6 +12,6 @@ class ShowCsrfTokenMiddleware:
         response = self.get_response(request)
 
         if 'X-Show-CSRFToken' in response.headers:
-            response.headers['X-CSRFToken'] = request.META['CSRF_COOKIE']
+            response.headers['X-Csrftoken'] = request.META['CSRF_COOKIE']
 
         return response

@@ -24,7 +24,10 @@ class RegisterView(generics.CreateAPIView):
         user = request_serializer.instance
         login(request, user)
         response_serializer = UserResponseSerializer(user)
-        headers = self.get_success_headers(response_serializer.data)
+        headers = {
+            **self.get_success_headers(response_serializer.data),
+            'X-Show-CSRFToken': 'True',
+        }
         return views.Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
