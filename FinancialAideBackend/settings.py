@@ -76,7 +76,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_COOKIE_DOMAIN = SESSION_COOKIE_DOMAIN = get_environment_var('FRONTEND_URL').lstrip('http://').lstrip('https://').split(':')[0]
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_DOMAIN = SESSION_COOKIE_DOMAIN = ('vercel.app' if 'vercel.app' in
+                                get_environment_var('FRONTEND_URL') else None)
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
