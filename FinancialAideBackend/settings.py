@@ -150,7 +150,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'FinancialAideBackend.wsgi.application'
+WSGI_APPLICATION = 'FinancialAideBackend.wsgi.app'
 
 
 # Database
