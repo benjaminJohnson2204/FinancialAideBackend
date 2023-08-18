@@ -163,6 +163,7 @@ WSGI_APPLICATION = 'FinancialAideBackend.wsgi.app'
 if get_environment_var('USE_POSTGRES') == 'True':
     DATABASES = {
         'default': {
+            'ENGINE': 'dj_db_conn_pool.backends.postgresql',
             **dj_database_url.parse(get_environment_var('DATABASE_URL')),
             'POOL_OPTIONS': {
                 'POOL_SIZE': 2,
