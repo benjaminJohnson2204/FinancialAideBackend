@@ -51,11 +51,11 @@ class LoginView(generics.CreateAPIView):
     tags=['Users'],
     description='Log out the user'
 )
-@method_decorator(csrf_exempt, name='dispatch')
 class LogoutView(generics.GenericAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = EmptySerializer
 
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         logout(request)
         return views.Response(status=status.HTTP_204_NO_CONTENT)
