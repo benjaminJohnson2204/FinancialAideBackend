@@ -175,10 +175,7 @@ class PlannedActualSpendingExportView(generics.RetrieveAPIView):
         writer = csv.writer(response)
         writer.writerow(['Category', 'Planned ($)', 'Actual ($)'])
         for category_relation in budget.categories.all():
-            if category_relation.is_percentage:
-                amount = category_relation.amount * budget.income / 100
-            else:
-                amount = category_relation.amount
+            amount = category_relation.get_total_amount()
             writer.writerow([
                 category_relation.category.name,
                 amount,

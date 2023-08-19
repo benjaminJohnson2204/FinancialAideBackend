@@ -18,6 +18,32 @@ class Budget(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_duration_days(self):
+        """
+        Gets the duration of the budget, in days. Rounds down to the nearest day.
+        """
+        delta = self.end_time - self.start_time
+        return delta.days
+
+    def get_multiplier(self):
+        """
+        Returns the amount by which this budget's income should be
+        multiplied to get the TOTAL income across the budget.
+        For example, if a budget is monthly and lasts for 2.5 months,
+        this function would return 2.5.
+        """
+        duration_days = self.get_duration_days()
+        days_multiplier = 1
+        if self.interval == TimeInterval.YEARLY:
+            days_multiplier = 365
+        elif self.interval == TimeInterval.MONTHLY:
+            days_multiplier = 52
+        elif self.interval == TimeInterval.WEEKLY:
+            days_multiplier = 7
+        return duration_days * days_multiplier
+
+
+
     class Meta:
         ordering = ['-end_time'] # show most recent first by default
 
@@ -64,6 +90,18 @@ class BudgetCategoryRelation(models.Model):
     category = models.ForeignKey(BudgetCategory, on_delete=models.CASCADE, related_name='relations')
     amount = models.DecimalField(max_digits=12, decimal_places=2, )
     is_percentage = models.BooleanField()
+
+    def get_total_amount(self):
+        """
+        Gets the total amount (raw amount) allocated to this
+        category relation across the entire budget
+        """
+        budget_multiplier = self.budget.get_multiplier()
+        amount = self.amount
+        if self.is_percentage:
+            amount *= self.budget.income / 100
+        return budget_multiplier * amount
+
 
     class Meta:
         # Can't have more than 1 amount budgeted to same category for same budget
