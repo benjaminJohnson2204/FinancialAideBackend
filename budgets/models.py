@@ -37,11 +37,10 @@ class Budget(models.Model):
         if self.interval == TimeInterval.YEARLY:
             days_multiplier = 365
         elif self.interval == TimeInterval.MONTHLY:
-            days_multiplier = 52
+            days_multiplier = 30
         elif self.interval == TimeInterval.WEEKLY:
             days_multiplier = 7
-        return duration_days * days_multiplier
-
+        return duration_days / days_multiplier
 
 
     class Meta:
