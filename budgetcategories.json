@@ -1,0 +1,101 @@
+[
+{
+  "model": "budgets.budgetcategory",
+  "pk": 1,
+  "fields": {
+    "name": "Gas",
+    "typical_percentage": "2.00",
+    "typical_monthly_amount": "175.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 2,
+  "fields": {
+    "name": "Food",
+    "typical_percentage": "10.00",
+    "typical_monthly_amount": "350.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 3,
+  "fields": {
+    "name": "Rent",
+    "typical_percentage": "25.00",
+    "typical_monthly_amount": "1700.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 4,
+  "fields": {
+    "name": "Car",
+    "typical_percentage": "7.50",
+    "typical_monthly_amount": "600.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 5,
+  "fields": {
+    "name": "Insurance",
+    "typical_percentage": "4.00",
+    "typical_monthly_amount": "400.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 6,
+  "fields": {
+    "name": "Entertainment",
+    "typical_percentage": "8.00",
+    "typical_monthly_amount": "250.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 7,
+  "fields": {
+    "name": "Clothing",
+    "typical_percentage": "3.00",
+    "typical_monthly_amount": "65.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 8,
+  "fields": {
+    "name": "Utilities",
+    "typical_percentage": "5.00",
+    "typical_monthly_amount": "350.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 9,
+  "fields": {
+    "name": "Phone Bill",
+    "typical_percentage": "0.25",
+    "typical_monthly_amount": "25.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 10,
+  "fields": {
+    "name": "Misceallaneous",
+    "typical_percentage": "3.50",
+    "typical_monthly_amount": "200.00"
+  }
+},
+{
+  "model": "budgets.budgetcategory",
+  "pk": 11,
+  "fields": {
+    "name": "Loans",
+    "typical_percentage": "8.00",
+    "typical_monthly_amount": "400.00"
+  }
+}
+]

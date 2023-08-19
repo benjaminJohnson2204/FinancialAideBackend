@@ -99,7 +99,7 @@ class BudgetCategoryRelation(models.Model):
         amount = self.amount
         if self.is_percentage:
             amount *= self.budget.income / 100
-        return budget_multiplier * amount
+        return budget_multiplier * float(amount)
 
 
     class Meta:
