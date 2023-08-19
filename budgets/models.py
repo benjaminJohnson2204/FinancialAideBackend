@@ -101,7 +101,6 @@ class BudgetCategoryRelation(models.Model):
             amount *= self.budget.income / 100
         return budget_multiplier * float(amount)
 
-
     class Meta:
         # Can't have more than 1 amount budgeted to same category for same budget
         unique_together = [["budget", "category"]]

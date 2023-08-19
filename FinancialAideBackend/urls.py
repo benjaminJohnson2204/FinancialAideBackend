@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path, include, re_path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
@@ -25,5 +26,8 @@ urlpatterns = [
     path('api/users/', include('users.urls')),
 
     re_path(r'^schema/', SpectacularAPIView.as_view(), name='schema'),
-    re_path(r'^docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger_docs')
+    re_path(r'^docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger_docs'),
+
+    # Redirect index to docs because that's the only interesting page for human clients
+    path('', lambda request: redirect('swagger_docs'), name='index')
 ]

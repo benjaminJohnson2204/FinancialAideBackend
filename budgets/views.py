@@ -175,7 +175,7 @@ class PlannedActualSpendingExportView(generics.RetrieveAPIView):
         writer = csv.writer(response)
         writer.writerow(['Category', 'Planned ($)', 'Actual ($)'])
         for category_relation in budget.categories.all():
-            amount = category_relation.get_total_amount()
+            amount = f'{(category_relation.get_total_amount()):.2f}'
             writer.writerow([
                 category_relation.category.name,
                 amount,
