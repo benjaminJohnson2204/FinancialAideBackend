@@ -66,7 +66,7 @@ class BudgetTests(TestCase):
             is_percentage=True
         )
 
-    def test_create_budget(self):
+    def test_create_budget_valid(self):
         self.client.login(username='user1', password='password1')
         response = self.client.post(
             reverse('budget_list'),
@@ -83,7 +83,35 @@ class BudgetTests(TestCase):
         self.assertEqual(response.json()['interval'], TimeInterval.WEEKLY)
         self.assertEqual(response.json()['user']['username'], 'user1')
 
-    def test_list_budgets(self):
+    def test_create_budget_missing_fields(self):
+        self.client.login(username='user1', password='password1')
+        response = self.client.post(
+            reverse('budget_list'),
+            {
+                'name': 'New Budget',
+                'start_time': datetime.now(tz=timezone.utc),
+                'end_time': datetime.now(tz=timezone.utc),
+                'interval': TimeInterval.WEEKLY,
+            },
+            'application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_budget_unauthorized(self):
+        response = self.client.post(
+            reverse('budget_list'),
+            {
+                'name': 'New Budget',
+                'start_time': datetime.now(tz=timezone.utc),
+                'end_time': datetime.now(tz=timezone.utc),
+                'interval': TimeInterval.WEEKLY,
+                'income': 1100,
+            },
+            'application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_list_budgets_valid(self):
         self.client.login(username='user1', password='password1')
         response = self.client.get(
             reverse('budget_list')
@@ -91,6 +119,12 @@ class BudgetTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['count'], 1) # Only 1 budget owned by user 1
         self.assertEqual(response.json()['results'][0]['id'], self.budget1.pk)
+
+    def test_list_budgets_unauthorized(self):
+        response = self.client.get(
+            reverse('budget_list')
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_cant_retrieve_other_users_budget(self):
         self.client.login(username='user1', password='password1')
@@ -111,6 +145,62 @@ class BudgetTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['user']['id'], self.user2.pk)
         self.assertEqual(response.json()['interval'], self.budget2.interval)
+
+    def test_cant_edit_other_users_budget(self):
+        self.client.login(username='user1', password='password1')
+        response = self.client.patch(
+            reverse('budget_detail', kwargs={
+                'pk': self.budget2.pk
+            }),
+            {
+                'income': 575,
+            },
+            'application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Ensure the budget didn't actually change
+        self.assertEqual(Budget.objects.get(pk=self.budget2.pk).income, 4500)
+
+    def test_edit_own_budget(self):
+        self.client.login(username='user2', password='password2')
+        response = self.client.patch(
+            reverse('budget_detail', kwargs={
+                'pk': self.budget2.pk
+            }),
+            {
+                'income': 575,
+            },
+            'application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Ensure the budget DID actually change
+        self.assertEqual(Budget.objects.get(pk=self.budget2.pk).income, 575)
+
+    def test_cant_delete_other_users_budget(self):
+        self.client.login(username='user1', password='password1')
+        response = self.client.delete(
+            reverse('budget_detail', kwargs={
+                'pk': self.budget2.pk
+            })
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Ensure the budget didn't actually get deleted
+        self.assertEqual(Budget.objects.filter(pk=self.budget2.pk).count(), 1)
+
+    def test_delete_own_budget(self):
+        self.client.login(username='user2', password='password2')
+        response = self.client.delete(
+            reverse('budget_detail', kwargs={
+                'pk': self.budget2.pk
+            })
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Ensure the budget DID actually get deleted
+        self.assertEqual(Budget.objects.filter(pk=self.budget2.pk).count(), 0)
 
     def test_list_budget_categories(self):
         self.client.login(username='user1', password='password1')
@@ -202,7 +292,7 @@ class BudgetTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['count'], 0)
 
-    def test_bulk_update_other_users_budget_category_relations(self):
+    def test_cant_bulk_update_other_users_budget_category_relations(self):
         self.client.login(username='user1', password='password1')
         response = self.client.patch(
             reverse('budget_category_relation_bulk_update', kwargs={'pk': self.budget2.pk}),
@@ -300,11 +390,22 @@ class BudgetTests(TestCase):
         self.assertEqual(category_relation.is_percentage, True)
         self.assertNotEqual(category_relation.pk, self.budget_category_relation1.pk)
 
-    def test_get_planned_actual_spending(self):
+    def test_get_planned_actual_spending_valid(self):
         self.client.login(username='user1', password='password1')
         response = self.client.get(reverse('planned_actual_spending', kwargs={
             'pk': self.budget1.pk
         }))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_cant_get_planned_actual_spending_other_users_budget(self):
+        self.client.login(username='user2', password='password2')
+        response = self.client.get(reverse('planned_actual_spending', kwargs={
+            'pk': self.budget1.pk
+        }))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_get_planned_spending_unauthorized(self):
+        response = self.client.get(reverse('planned_actual_spending', kwargs={
+            'pk': self.budget1.pk
+        }))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

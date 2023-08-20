@@ -9,7 +9,7 @@ from users.models import User
 from utils.choices import *
 
 
-class ExpensesTest(TestCase):
+class ExpensesTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user1 = User.objects.create_user(
@@ -50,7 +50,7 @@ class ExpensesTest(TestCase):
             user=cls.user2,
         )
 
-    def test_create_expense(self):
+    def test_create_expense_valid(self):
         self.client.login(username='user1', password='password1')
         response = self.client.post(
             reverse('expense_list'),
@@ -66,7 +66,33 @@ class ExpensesTest(TestCase):
         self.assertEqual(response.json()['name'], 'New Expense')
         self.assertEqual(response.json()['user']['username'], 'user1')
 
-    def test_list_expenses(self):
+    def test_create_expense_missing_fields(self):
+        self.client.login(username='user1', password='password1')
+        response = self.client.post(
+            reverse('expense_list'),
+            {
+                'name': 'New Expense',
+                'category': self.budget_category3.pk,
+                'timestamp': datetime.now(tz=timezone.utc),
+            },
+            'application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_expense_unauthorized(self):
+        response = self.client.post(
+            reverse('expense_list'),
+            {
+                'name': 'New Expense',
+                'category': self.budget_category3.pk,
+                'timestamp': datetime.now(tz=timezone.utc),
+                'amount': 45.56,
+            },
+            'application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_list_expenses_valid(self):
         self.client.login(username='user1', password='password1')
         response = self.client.get(
             reverse('expense_list')
@@ -74,6 +100,12 @@ class ExpensesTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['count'], 1) # Only this user's expense
         self.assertEqual(response.json()['results'][0]['id'], self.expense1.pk)
+
+    def test_list_expenses_unauthorized(self):
+        response = self.client.get(
+            reverse('expense_list')
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_list_expenses_category_filter_exact(self):
         self.client.login(username='user1', password='password1')
@@ -129,7 +161,23 @@ class ExpensesTest(TestCase):
         self.assertEqual(response.json()['user']['id'], self.user2.pk)
         self.assertEqual(float(response.json()['amount']), self.expense2.amount)
 
-    def test_edit_expense(self):
+    def test_cant_edit_other_users_expense(self):
+        self.client.login(username='user1', password='password1')
+        response = self.client.patch(
+            reverse('expense_detail', kwargs={
+                'pk': self.expense2.pk
+            }),
+            {
+                'name': 'New Expense Name'
+            },
+            'application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        # Ensure the expense didn't actually change
+        self.assertEqual(Expense.objects.get(pk=self.expense2.pk).name, 'Expense 2')
+
+    def test_edit_own_expense(self):
         self.client.login(username='user1', password='password1')
         response = self.client.patch(
             reverse('expense_detail', kwargs={
@@ -144,7 +192,17 @@ class ExpensesTest(TestCase):
         self.assertEqual(response.json()['name'], 'New Expense Name')
         self.assertEqual(Expense.objects.get(pk=self.expense1.pk).name, 'New Expense Name')
 
-    def test_delete_expense(self):
+    def test_cant_delete_other_users_expense(self):
+        self.client.login(username='user1', password='password1')
+        response = self.client.delete(
+            reverse('expense_detail', kwargs={
+                'pk': self.expense2.pk
+            })
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Expense.objects.filter(pk=self.expense2.pk).count(), 1)
+
+    def test_delete_own_expense(self):
         self.client.login(username='user1', password='password1')
         response = self.client.delete(
             reverse('expense_detail', kwargs={
@@ -152,8 +210,7 @@ class ExpensesTest(TestCase):
             })
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Expense.objects.count(), 1)
-        self.assertEqual(Expense.objects.first().pk, self.expense2.pk)
+        self.assertEqual(Expense.objects.filter(pk=self.expense1.pk).count(), 0)
 
     def test_get_expenses_by_category(self):
         self.client.login(username='user1', password='password1')
@@ -199,10 +256,21 @@ class ExpensesTest(TestCase):
         self.assertEqual(response.json()['results'][1]['id'], self.budget_category1.pk)
         self.assertEqual(response.json()['results'][2]['id'], self.budget_category3.pk)
 
-    def test_get_expenses_csv(self):
+    def test_get_expenses_by_category_unauthorized(self):
+        response = self.client.get(
+            reverse('expenses_by_category')
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_expenses_csv_valid(self):
         self.client.login(username='user1', password='password1')
         response = self.client.get(
             reverse('expenses_csv_export')
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_get_expenses_csv_unauthorized(self):
+        response = self.client.get(
+            reverse('expenses_csv_export')
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

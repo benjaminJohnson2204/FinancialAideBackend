@@ -42,9 +42,13 @@ The production database is hosted on ElephantSQL.
 
 I wrote unit tests for each app to verify the functionality of my code. I mainly tested hitting the API endpoints and ensuring the response it what is expected
 (status code, response content, effects or lack thereof on DB state). I used Django's built-in testing framework, built on the Python `unittest` module, for my tests. 
-You can run them with `python manage.py test`.
+The tests can be found in a `tests.py` file within each of my apps (e.g. `budgets/tests.py`). You can run them with `python manage.py test`.
 
 ## Documentation
 
 I documented my API using DRF Spectacular, a Django REST Framework package that allows you to generate an OpenAPI specification from your views (path, method, request & response content, etc). You can them convert that specification to a Swagger UI page. 
-My documentation is hosted on the `/docs` path: https://financial-aide-backend.vercel.app/docs/.
+
+My documentation is hosted on the `/docs` path: https://financial-aide-backend.vercel.app/docs/. To generate a documentation file, run `python manage.py spectacular --file schema.yaml`. This will create a `schema.yaml` file with the API specification. The 
+`schema.yaml` file is used to display documentation on the `/docs` path. 
+
+I also used this schema specification to generate a client for my front end using the Swagger editor at https://editor.swagger.io/.

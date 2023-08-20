@@ -14,23 +14,6 @@ from expenses.permissions import *
 from expenses.serializers import *
 from utils.serializers import EmptySerializer
 
-'''
-1. Need to view budget categories as pie chart, ability to hover and see name, percentage, and amount
-2. Need to view expenses by category as pie chart, same as above
-3. Need to view above 2 pie charts side-by-side
-4. Need to see bar chart with 2 bars for each category: planned (in budget) and actual (in expenses)
-Done! 5. Need to export expenses data as CSV file
-6. Need to export planned and actual spending by category
-
-Required endpoints:
-1. None
-2. GET /expenses/by_category - gets percentage & amount of each category of expenses. same 
-    filters as for expenses list (e.g. filter by time period)
-3. None
-4. None
-5. GET /expenses/csv_export - gets a CSV file with expenses 
-6. GET /expenses/planned_actual_export - gets a CSV with planned and actual spending by category
-'''
 
 @extend_schema(
     tags=['Expenses'],

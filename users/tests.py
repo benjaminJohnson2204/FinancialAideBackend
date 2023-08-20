@@ -114,3 +114,16 @@ class AuthenticationTests(TestCase):
         )
         self.assertEqual(response.json()['email'], 'user2@gmail.com')
         self.assertEqual(response.json()['username'], 'user2')
+
+    def test_logout(self):
+        self.client.login(username='user2', password='password2')
+        response = self.client.post(
+            reverse('logout')
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Ensure the client is no longer logged in
+        response = self.client.get(
+            reverse('whoami')
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
